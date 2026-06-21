@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Credit Fit | Move Mix</title>
+    <!-- Pretendard Font -->
+    <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
+    <link rel="stylesheet" href="/static/css/style.css">
+    <!-- Leaflet.js API (CDNJS for faster loading in KR) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+</head>
+<body>
+    <!-- Login Overlay -->
+    <div id="login-overlay" class="login-overlay">
+        <div class="login-card glass-card">
+            <div class="login-header">
+                <h2>Credit Fit 시작하기</h2>
+                <p>아이디를 입력하고 나만의 스포츠 패키지를 예약해보세요.</p>
+            </div>
+            <div class="login-form">
+                <input type="text" id="login-id" class="glass-input" placeholder="아이디를 입력하세요" autocomplete="off" />
+                <button id="btn-login" class="btn-primary">시작하기</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="app-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <h1>Credit Fit</h1>
+                <p>Move Mix Sports Package</p>
+                <div class="user-greeting" id="user-greeting" style="display:none; margin-top:12px; font-weight:600; font-size:14px; color:var(--accent-color);"></div>
+            </div>
+            
+            <div class="status-panel">
+                <div class="status-item" style="flex:1;">
+                    <span class="status-label">General Credits</span>
+                    <span class="status-value highlight" id="my-credits-display">50 💳</span>
+                </div>
+                <div class="status-item" style="flex:1;">
+                    <span class="status-label">Voucher Credits</span>
+                    <span class="status-value" id="my-voucher-display" style="color:#3b82f6;">50 🎫</span>
+                </div>
+            </div>
+
+            <div class="facilities-header">
+                <h2>Available Facilities</h2>
+                <div class="filter-badge">Near you</div>
+            </div>
+
+            <!-- Facility List Container -->
+            <div class="facility-list" id="facility-list">
+                <!-- Data will be injected here by JS -->
+                <div class="loading-state">
+                    <div class="spinner"></div>
+                    <p>LSTM 예측 혼잡도 데이터를 불러오는 중...</p>
+                </div>
+            </div>
+            
+            <!-- Government Voucher Badge -->
+            <div class="voucher-badge-container">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Emblem_of_the_Government_of_the_Republic_of_Korea.svg/300px-Emblem_of_the_Government_of_the_Republic_of_Korea.svg.png" alt="Government Logo" style="height:24px;">
+                <div class="voucher-text">
+                    <span class="title">스포츠 바우처 공식 지원</span>
+                    <span class="desc">문화체육관광부 · 국민체육진흥공단</span>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Map Container -->
+        <main class="map-area">
+            <div id="map" style="width:100%; height:100%; z-index: 1;"></div>
+        </main>
+    </div>
+
+    <!-- Booking Modal -->
+    <div id="booking-modal" class="modal-overlay hidden">
+        <div class="modal-card">
+            <h2 id="modal-fac-name">Facility Name</h2>
+            <div class="modal-form-group">
+                <label for="time-slot">시간대 선택</label>
+                <select id="time-slot" class="glass-select">
+                    <option value="18:00">18:00 ~ 19:00</option>
+                    <option value="19:00">19:00 ~ 20:00</option>
+                    <option value="20:00">20:00 ~ 21:00</option>
+                </select>
+            </div>
+            <div class="modal-credits">
+                <span>요구 크레딧: </span>
+                <span id="modal-req-credit" class="highlight">3</span> <span class="credit-icon">💳</span>
+            </div>
+            <div class="modal-actions" id="modal-actions">
+                <button id="btn-cancel" class="btn-outline">취소</button>
+                <button id="btn-voucher" class="btn-primary" style="background:#1e3a8a; display:none; flex:1.5; white-space:nowrap;">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Emblem_of_the_Government_of_the_Republic_of_Korea.svg/300px-Emblem_of_the_Government_of_the_Republic_of_Korea.svg.png" style="width:16px; vertical-align:middle; margin-right:6px;" alt="정부 로고">
+                    바우처 결제
+                </button>
+                <button id="btn-confirm" class="btn-primary">일반 결제</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notification Container -->
+    <div id="toast-container" class="toast-container"></div>
+
+    <script src="/static/js/main.js"></script>
+</body>
+</html>

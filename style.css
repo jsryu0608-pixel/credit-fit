@@ -1,0 +1,590 @@
+:root {
+    --bg-dark: #121212;
+    --sidebar-bg: #181818;
+    --card-bg: #282828;
+    --card-hover: #3E3E3E;
+    --text-primary: #FFFFFF;
+    --text-secondary: #B3B3B3;
+    --accent-color: #1DB954;
+    --accent-hover: #1ED760;
+    --warning-color: #E22134; /* slightly softer red */
+    --info-color: #2D46B9; /* spotify-ish blue */
+    --border-subtle: #282828;
+    --font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: var(--font-family);
+    background-color: var(--bg-dark);
+    color: var(--text-primary);
+    overflow: hidden;
+    -webkit-font-smoothing: antialiased;
+}
+
+.app-container {
+    display: flex;
+    height: 100vh;
+    width: 100vw;
+}
+
+/* Sidebar styling */
+.sidebar {
+    width: 400px;
+    background: var(--sidebar-bg);
+    border-right: 1px solid var(--border-subtle);
+    display: flex;
+    flex-direction: column;
+    z-index: 10;
+    /* Spotify doesn't use harsh drop shadows for main layout */
+}
+
+.sidebar-header {
+    padding: 30px 24px;
+    /* Removed gradient, clean solid look */
+    background: var(--sidebar-bg);
+}
+
+.sidebar-header h1 {
+    font-size: 28px;
+    font-weight: 800;
+    color: var(--text-primary);
+    letter-spacing: -0.5px;
+}
+
+.sidebar-header p {
+    color: var(--text-secondary);
+    font-size: 14px;
+    margin-top: 4px;
+    font-weight: 500;
+}
+
+.status-panel {
+    display: flex;
+    justify-content: space-between;
+    padding: 20px 24px;
+    border-bottom: 1px solid var(--border-subtle);
+    background: var(--sidebar-bg);
+}
+
+.status-item {
+    display: flex;
+    flex-direction: column;
+}
+
+.status-label {
+    font-size: 11px;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 1.2px;
+    font-weight: 600;
+}
+
+.status-value {
+    font-size: 18px;
+    font-weight: 700;
+    margin-top: 4px;
+}
+
+.status-value.highlight {
+    color: var(--accent-color);
+}
+
+.facilities-header {
+    padding: 24px 24px 16px 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.facilities-header h2 {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--text-primary);
+}
+
+.filter-badge {
+    background: var(--card-bg);
+    color: var(--text-primary);
+    padding: 6px 12px;
+    border-radius: 16px;
+    font-size: 12px;
+    font-weight: 600;
+    transition: all 0.2s ease;
+    cursor: pointer;
+}
+
+.filter-badge:hover {
+    background: var(--card-hover);
+    color: #fff;
+}
+
+/* Facility List */
+.facility-list {
+    flex: 1;
+    overflow-y: auto;
+    padding: 0 16px 24px 16px; /* slightly less side padding for cards */
+}
+
+.facility-list::-webkit-scrollbar {
+    width: 12px;
+}
+
+.facility-list::-webkit-scrollbar-thumb {
+    background-color: rgba(255, 255, 255, 0.3);
+    border: 3px solid var(--sidebar-bg);
+    border-radius: 8px;
+}
+.facility-list::-webkit-scrollbar-thumb:hover {
+    background-color: rgba(255, 255, 255, 0.5);
+}
+
+.facility-card {
+    background: var(--sidebar-bg); /* Match sidebar */
+    border: none;
+    border-radius: 8px;
+    padding: 12px;
+    margin-bottom: 8px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.facility-card:hover {
+    background: var(--card-bg); /* Highlight on hover like Spotify rows */
+}
+
+.facility-img {
+    width: 100%;
+    height: 140px;
+    border-radius: 6px;
+    object-fit: cover;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+}
+
+.facility-info h3 {
+    font-size: 15px;
+    font-weight: 700;
+    margin-bottom: 4px;
+    color: var(--text-primary);
+}
+
+.facility-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 4px;
+}
+
+.credit-badge {
+    background: transparent;
+    color: var(--text-secondary);
+    padding: 0;
+    font-weight: 500;
+    font-size: 13px;
+}
+
+.status-badge {
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+}
+
+.status-badge.혼잡 {
+    background: var(--warning-color);
+    color: #fff;
+}
+
+.status-badge.쾌적 {
+    background: var(--accent-color);
+    color: #121212;
+}
+
+.status-badge.보통 {
+    background: var(--info-color);
+    color: #fff;
+}
+
+.congestion-bar-bg {
+    width: 100%;
+    height: 4px;
+    background: #333;
+    border-radius: 2px;
+    margin-top: 8px;
+    overflow: hidden;
+}
+
+.congestion-bar-fill {
+    height: 100%;
+    border-radius: 2px;
+    transition: width 1s ease-in-out;
+}
+
+/* Map Area */
+.map-area {
+    flex: 1;
+    background: var(--bg-dark);
+    position: relative;
+}
+
+/* Loading */
+.loading-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 0;
+    color: var(--text-secondary);
+}
+
+.spinner {
+    width: 32px;
+    height: 32px;
+    border: 3px solid #333;
+    border-top: 3px solid var(--text-secondary);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin-bottom: 16px;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Modal Overlay & Card */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.7);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    opacity: 1;
+    transition: opacity 0.2s ease;
+}
+
+.modal-overlay.hidden {
+    opacity: 0;
+    pointer-events: none;
+}
+
+.modal-card {
+    background: var(--card-bg);
+    box-shadow: 0 16px 40px rgba(0,0,0,0.5);
+    border-radius: 8px;
+    padding: 32px;
+    width: 90%;
+    max-width: 400px;
+    transform: scale(1);
+    transition: transform 0.2s ease;
+}
+
+.modal-overlay.hidden .modal-card {
+    transform: scale(0.95);
+}
+
+.modal-card h2 {
+    font-size: 24px;
+    font-weight: 800;
+    margin-bottom: 24px;
+    color: var(--text-primary);
+    text-align: center;
+}
+
+.modal-form-group {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 24px;
+}
+
+.modal-form-group label {
+    font-size: 13px;
+    color: var(--text-secondary);
+    margin-bottom: 8px;
+    font-weight: 700;
+}
+
+.glass-select {
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid transparent;
+    color: var(--text-primary);
+    padding: 14px;
+    border-radius: 4px;
+    font-family: inherit;
+    font-size: 14px;
+    outline: none;
+    cursor: pointer;
+    appearance: none;
+    transition: background 0.2s ease;
+}
+
+.glass-select:hover {
+    background: rgba(255, 255, 255, 0.15);
+}
+
+.glass-select option {
+    background: var(--card-bg);
+    color: var(--text-primary);
+}
+
+.modal-credits {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 4px;
+    padding: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 32px;
+    font-weight: 700;
+    color: var(--text-secondary);
+}
+
+.modal-credits .highlight {
+    font-size: 24px;
+    color: var(--text-primary);
+}
+
+.modal-actions {
+    display: flex;
+    gap: 12px;
+}
+
+.btn-outline, .btn-primary {
+    flex: 1;
+    padding: 14px 0;
+    border-radius: 32px; /* Spotify style pill buttons */
+    font-weight: 700;
+    font-size: 14px;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    border: none;
+    font-family: inherit;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.btn-outline {
+    background: transparent;
+    border: 1px solid #727272;
+    color: var(--text-primary);
+}
+
+.btn-outline:hover {
+    border-color: var(--text-primary);
+    transform: scale(1.04);
+}
+
+.btn-primary {
+    background: var(--accent-color);
+    color: #000;
+}
+
+.btn-primary:hover {
+    background: var(--accent-hover);
+    transform: scale(1.04);
+}
+
+/* Toast Notification */
+.toast-container {
+    position: fixed;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 1100;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.toast {
+    background: #2E77D0;
+    color: #fff;
+    padding: 14px 24px;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+    font-weight: 600;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    animation: toastSlideUp 0.3s ease forwards;
+}
+
+.toast.fade-out {
+    animation: toastFadeOut 0.3s ease forwards;
+}
+
+@keyframes toastSlideUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes toastFadeOut {
+    from { opacity: 1; transform: translateY(0); }
+    to { opacity: 0; transform: translateY(-20px); }
+}
+
+/* Login Overlay */
+.login-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: var(--bg-dark);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 2000;
+    transition: opacity 0.5s ease, visibility 0.5s;
+}
+
+.login-overlay.hidden {
+    opacity: 0;
+    visibility: hidden;
+}
+
+.login-card {
+    width: 100%;
+    max-width: 450px;
+    padding: 40px;
+    background: var(--bg-dark);
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+    text-align: center;
+}
+
+.login-header h2 {
+    font-size: 32px;
+    font-weight: 800;
+    margin-bottom: 12px;
+    color: var(--text-primary);
+}
+
+.login-header p {
+    font-size: 16px;
+    color: var(--text-secondary);
+    font-weight: 500;
+}
+
+.login-form {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.glass-input {
+    background: transparent;
+    border: 1px solid #727272;
+    color: var(--text-primary);
+    padding: 14px 16px;
+    border-radius: 4px;
+    font-family: inherit;
+    font-size: 16px;
+    outline: none;
+    transition: border-color 0.2s ease;
+}
+
+.glass-input:focus {
+    border-color: var(--text-primary);
+}
+
+.login-form .btn-primary {
+    border-radius: 32px;
+    padding: 16px;
+    font-size: 16px;
+}
+
+/* Leaflet Custom Marker */
+.spotify-marker {
+    background-color: var(--accent-color);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+    border: 2px solid #121212;
+    transition: transform 0.2s ease;
+}
+.spotify-marker:hover {
+    transform: scale(1.15) !important;
+    background-color: var(--accent-hover);
+}
+
+/* Government Voucher Badge */
+.voucher-badge-container {
+    padding: 16px 24px;
+    margin-top: auto;
+    border-top: 1px solid var(--border-subtle);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: rgba(255, 255, 255, 0.03);
+}
+
+.voucher-badge-container img {
+    height: 24px;
+    opacity: 0.8; /* subtly blend into dark theme */
+    filter: grayscale(100%) brightness(200%);
+    transition: all 0.2s ease;
+}
+
+.voucher-badge-container:hover img {
+    opacity: 1;
+    filter: grayscale(0%) brightness(100%);
+}
+
+.voucher-text {
+    display: flex;
+    flex-direction: column;
+}
+
+.voucher-text .title {
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--text-primary);
+}
+
+.voucher-text .desc {
+    font-size: 11px;
+    color: var(--text-secondary);
+}
+
+/* Custom Infowindow Override */
+.leaflet-popup-content-wrapper {
+    background: var(--card-bg) !important;
+    color: var(--text-primary) !important;
+    border-radius: 8px !important;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.5) !important;
+}
+.leaflet-popup-tip {
+    background: var(--card-bg) !important;
+}
+.leaflet-popup-content {
+    font-family: var(--font-family) !important;
+    margin: 14px 16px !important;
+}
+.leaflet-popup-content h4 {
+    margin-bottom: 8px;
+    font-size: 14px;
+    font-weight: 700;
+}
