@@ -143,7 +143,7 @@ function renderFacilityList(facilities) {
         // Click to pan map and open modal
         card.addEventListener('click', () => {
             if(mapInstance) {
-                mapInstance.flyTo([fac.latitude, fac.longitude], 16);
+                mapInstance.morph(new naver.maps.LatLng(fac.latitude, fac.longitude), 16);
             }
             openBookingModal(fac);
         });
@@ -164,8 +164,8 @@ document.head.appendChild(styleSheet);
 
 
 function initMap(facilities) {
-    if (typeof L === 'undefined') {
-        console.warn("Leaflet API not loaded.");
+    if (typeof naver === 'undefined') {
+        console.warn("Naver Map API not loaded.");
         return;
     }
 
@@ -175,13 +175,12 @@ function initMap(facilities) {
     const avgLat = facilities.reduce((sum, fac) => sum + fac.latitude, 0) / facilities.length;
     const avgLng = facilities.reduce((sum, fac) => sum + fac.longitude, 0) / facilities.length;
 
-    // Initialize Leaflet map
-    mapInstance = L.map(container).setView([avgLat, avgLng], 14);
-
-    // Add OpenStreetMap tiles
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-    }).addTo(mapInstance);
+    // Initialize Naver map (스포티파이 다크 모드에 어울리는 옵션 적용)
+    mapInstance = new naver.maps.Map(container, {
+        center: new naver.maps.LatLng(avgLat, avgLng),
+        zoom: 14,
+        mapTypeId: naver.maps.MapTypeId.NORMAL
+    });
 
     facilities.forEach(fac => {
         // Map Emoji
@@ -197,15 +196,23 @@ function initMap(facilities) {
         else if (name.includes('배드민턴') || name.includes('테니스')) emoji = '🏸';
         else if (name.includes('체육') || name.includes('스포츠') || name.includes('짐')) emoji = '🏋️‍♂️';
 
-        const customIcon = L.divIcon({
-            className: 'custom-spotify-marker-container',
-            html: `<div class="spotify-marker" style="width:32px; height:32px; font-size:16px;">${emoji}</div>`,
-            iconSize: [32, 32],
-            iconAnchor: [16, 16]
-        });
+        // 네이버 지도 커스텀 HTML 마커 (스포티파이 디자인 유지)
+        const markerHtml = `
+            <div class="custom-spotify-marker-container">
+                <div class="spotify-marker" style="width:32px; height:32px; font-size:16px;">${emoji}</div>
+            </div>
+        `;
 
-        // Create Marker
-        const marker = L.marker([fac.latitude, fac.longitude], { icon: customIcon }).addTo(mapInstance);
+        const marker = new naver.maps.Marker({
+            position: new naver.maps.LatLng(fac.latitude, fac.longitude),
+            map: mapInstance,
+            icon: {
+                content: markerHtml,
+                size: new naver.maps.Size(32, 32),
+                anchor: new naver.maps.Point(16, 16)
+            }
+        });
+        
         markers.push(marker);
 
         // Add info window
@@ -214,22 +221,33 @@ function initMap(facilities) {
         else if (fac.status_message === '보통') colorHex = '#3b82f6';
 
         const iwContent = `
-            <div class="custom-infowindow" style="background:transparent; border:none; padding:0; min-width:auto; color:black;">
-                <h4 style="margin:0 0 5px 0; color:#0f172a;">${fac.facility_name}</h4>
-                <p style="font-size:12px; margin:0; color:#475569;">${fac.status_message} (${fac.predicted_congestion}%)</p>
+            <div class="custom-infowindow" style="background:var(--card-bg); padding:14px 16px; border-radius:8px; box-shadow:0 8px 24px rgba(0,0,0,0.5); min-width:auto; color:var(--text-primary); border:none;">
+                <h4 style="margin:0 0 5px 0; font-size:14px; font-weight:700;">${fac.facility_name}</h4>
+                <p style="font-size:12px; margin:0; color:var(--text-secondary);">${fac.status_message} (${fac.predicted_congestion}%)</p>
                 <p style="font-size:14px; margin:5px 0 0 0; font-weight:bold; color:${colorHex};">${fac.required_credit} 크레딧</p>
             </div>
         `;
 
-        marker.bindPopup(iwContent);
+        const infoWindow = new naver.maps.InfoWindow({
+            content: iwContent,
+            borderWidth: 0,
+            backgroundColor: "transparent",
+            disableAnchor: true,
+            pixelOffset: new naver.maps.Point(0, -10)
+        });
 
-        // Map marker click also opens modal
-        marker.on('click', () => {
+        // 네이버 지도는 click 이벤트를 리스너로 등록
+        naver.maps.Event.addListener(marker, 'click', function() {
+            // 다른 열려있는 정보창이 있다면 닫고 새로 열기
+            if (infoWindow.getMap()) {
+                infoWindow.close();
+            } else {
+                infoWindow.open(mapInstance, marker);
+            }
             openBookingModal(fac);
         });
     });
 }
-
 function initModalEvents() {
     const cancelBtn = document.getElementById('btn-cancel');
     const confirmBtn = document.getElementById('btn-confirm');
