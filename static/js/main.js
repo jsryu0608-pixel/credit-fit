@@ -249,6 +249,41 @@ function initMap(facilities) {
             openBookingModal(fac);
         });
     });
+
+    // Initialize Marker Clustering
+    if (typeof MarkerClustering !== 'undefined') {
+        const htmlMarker1 = {
+            content: '<div style="cursor:pointer; width:44px; height:44px; display:flex; align-items:center; justify-content:center; font-family:\'Pretendard\', sans-serif; font-size:16px; font-weight:800; color:#121212; background:#1DB954; border-radius:50%; box-shadow:0 4px 10px rgba(0,0,0,0.5); border: 2.5px solid #121212; box-sizing: border-box;"></div>',
+            size: new naver.maps.Size(44, 44),
+            anchor: new naver.maps.Point(22, 22)
+        };
+        const htmlMarker2 = {
+            content: '<div style="cursor:pointer; width:54px; height:54px; display:flex; align-items:center; justify-content:center; font-family:\'Pretendard\', sans-serif; font-size:18px; font-weight:800; color:#121212; background:#1ED760; border-radius:50%; box-shadow:0 4px 10px rgba(0,0,0,0.5); border: 3px solid #121212; box-sizing: border-box;"></div>',
+            size: new naver.maps.Size(54, 54),
+            anchor: new naver.maps.Point(27, 27)
+        };
+        
+        new MarkerClustering({
+            minClusterSize: 2,
+            maxZoom: 13,
+            map: mapInstance,
+            markers: markers,
+            disableClickZoom: false,
+            gridSize: 120,
+            icons: [htmlMarker1, htmlMarker2],
+            indexGenerator: [10],
+            stylingFunction: function(clusterMarker, count) {
+                // Update the text inside the inner div
+                var el = clusterMarker.getElement();
+                var innerDiv = el.querySelector('div');
+                if (innerDiv) {
+                    innerDiv.innerText = count;
+                } else {
+                    el.innerText = count;
+                }
+            }
+        });
+    }
 }
 function initModalEvents() {
     const cancelBtn = document.getElementById('btn-cancel');

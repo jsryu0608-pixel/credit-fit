@@ -82,12 +82,16 @@ REAL_MOCK_CENTERS = [
     {"name": "구로구로거리공원 체육관", "lat": 37.4950, "lng": 126.8900}
 ]
 
-IMAGES = [
-    "/static/images/gym.png",
-    "/static/images/pool.png",
-    "/static/images/yoga.png",
-    "/static/images/soccer.png",
-]
+def get_image_for_name(name):
+    if "수영" in name:
+        return "/static/images/pool.png"
+    elif "축구" in name or "풋살" in name or "운동장" in name or "경기장" in name:
+        return "/static/images/soccer.png"
+    elif "요가" in name or "필라테스" in name:
+        return "/static/images/yoga.png"
+    else:
+        # Default to gym/general sports center
+        return "/static/images/gym.png"
 
 @app.route('/api/facilities', methods=['GET'])
 def get_facilities():
@@ -128,7 +132,7 @@ def get_facilities():
                 "lng": lng,
                 "base_credit": base_credit,
                 "is_public": True,
-                "image": random.choice(IMAGES)
+                "image": get_image_for_name(clean_name)
             })
             
     except Exception as e:
@@ -151,7 +155,7 @@ def get_facilities():
             "lng": mock_center["lng"],
             "base_credit": random.randint(2, 6),
             "is_public": True,
-            "image": random.choice(IMAGES)
+            "image": get_image_for_name(mock_center["name"])
         })
         idx_counter += 1
     
