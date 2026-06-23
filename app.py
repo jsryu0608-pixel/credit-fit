@@ -83,10 +83,10 @@ REAL_MOCK_CENTERS = [
 ]
 
 IMAGES = [
-    "https://images.unsplash.com/photo-1519315901367-f34f9274ceb3?auto=format&fit=crop&w=500&q=60",
-    "https://images.unsplash.com/photo-1534438327276-14e5300c3a48?auto=format&fit=crop&w=500&q=60",
-    "https://images.unsplash.com/photo-1511067007398-7e4b90cfa4bc?auto=format&fit=crop&w=500&q=60",
-    "https://images.unsplash.com/photo-1552079011-cb29528659d4?auto=format&fit=crop&w=500&q=60",
+    "/static/images/gym.png",
+    "/static/images/pool.png",
+    "/static/images/yoga.png",
+    "/static/images/soccer.png",
 ]
 
 @app.route('/api/facilities', methods=['GET'])
@@ -173,6 +173,19 @@ def get_facilities():
             predicted_congestion = 30
             final_credit = max(1, fac["base_credit"] - 1)
             status = "쾌적"
+        # Generate Airbnb-style mock data
+        has_shower = random.choice([True, False])
+        area_sqm = random.randint(150, 1500)
+        rating = round(random.uniform(3.8, 5.0), 1)
+        
+        # Randomly select 2-4 amenities
+        all_amenities = ["주차 가능", "샤워실", "개인 락커", "운동복 대여", "수건 제공", "Wi-Fi", "정수기", "카페테리아"]
+        num_amenities = random.randint(2, 4)
+        amenities = random.sample(all_amenities, num_amenities)
+        if has_shower and "샤워실" not in amenities:
+            amenities.append("샤워실")
+        elif not has_shower and "샤워실" in amenities:
+            amenities.remove("샤워실")
             
         processed_results.append({
             "facility_id": fac["id"],
@@ -183,7 +196,11 @@ def get_facilities():
             "predicted_congestion": predicted_congestion,
             "required_credit": final_credit,
             "status_message": status,
-            "image": fac["image"]
+            "image": fac["image"],
+            "has_shower": has_shower,
+            "area_sqm": area_sqm,
+            "rating": rating,
+            "amenities": amenities
         })
         
     return jsonify({

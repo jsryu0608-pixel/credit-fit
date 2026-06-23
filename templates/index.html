@@ -7,7 +7,10 @@
     <!-- Pretendard Font -->
     <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
     <link rel="stylesheet" href="/static/css/style.css">
-        <!-- Naver Map API -->
+    <!-- Material Symbols (Clean White Line Icons) -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
+    
+    <!-- Naver Map API -->
     <script src="https://oapi.map.naver.com/openapi/v3/maps.js?ncpKeyId=ukc7r00e2k"></script>
 </head>
 <body>
@@ -61,7 +64,7 @@
             
             <!-- Government Voucher Badge -->
             <div class="voucher-badge-container">
-                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Emblem_of_the_Government_of_the_Republic_of_Korea.svg/300px-Emblem_of_the_Government_of_the_Republic_of_Korea.svg.png" alt="Government Logo" style="height:24px;">
+                <img src="/static/images/gov_logo.png" alt="Government Logo" style="height:24px;">
                 <div class="voucher-text">
                     <span class="title">스포츠 바우처 공식 지원</span>
                     <span class="desc">문화체육관광부 · 국민체육진흥공단</span>
@@ -78,26 +81,39 @@
     <!-- Booking Modal -->
     <div id="booking-modal" class="modal-overlay hidden">
         <div class="modal-card">
-            <h2 id="modal-fac-name">Facility Name</h2>
-            <div class="modal-form-group">
-                <label for="time-slot">시간대 선택</label>
-                <select id="time-slot" class="glass-select">
-                    <option value="18:00">18:00 ~ 19:00</option>
-                    <option value="19:00">19:00 ~ 20:00</option>
-                    <option value="20:00">20:00 ~ 21:00</option>
-                </select>
-            </div>
-            <div class="modal-credits">
-                <span>요구 크레딧: </span>
-                <span id="modal-req-credit" class="highlight">3</span> <span class="credit-icon">💳</span>
-            </div>
-            <div class="modal-actions" id="modal-actions">
-                <button id="btn-cancel" class="btn-outline">취소</button>
-                <button id="btn-voucher" class="btn-primary" style="background:#1e3a8a; display:none; flex:1.5; white-space:nowrap;">
-                    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Emblem_of_the_Government_of_the_Republic_of_Korea.svg/300px-Emblem_of_the_Government_of_the_Republic_of_Korea.svg.png" style="width:16px; vertical-align:middle; margin-right:6px;" alt="정부 로고">
-                    바우처 결제
-                </button>
-                <button id="btn-confirm" class="btn-primary">일반 결제</button>
+            <img id="modal-image" class="modal-cover-image" src="" alt="Facility Image">
+            <div class="modal-card-content">
+                <h2 id="modal-fac-name">Facility Name</h2>
+                
+                <div class="modal-meta-row">
+                    <div class="modal-rating">⭐ <span id="modal-rating-val">4.5</span></div>
+                    <div id="modal-area">면적: 500㎡</div>
+                </div>
+
+                <div class="modal-amenities" id="modal-amenities">
+                    <!-- Amenities injected here by JS -->
+                </div>
+
+                <div class="modal-form-group">
+                    <label for="time-slot">시간대 선택</label>
+                    <select id="time-slot" class="glass-select">
+                        <option value="18:00">18:00 ~ 19:00</option>
+                        <option value="19:00">19:00 ~ 20:00</option>
+                        <option value="20:00">20:00 ~ 21:00</option>
+                    </select>
+                </div>
+                <div class="modal-credits">
+                    <span>요구 크레딧: </span>
+                    <div><span id="modal-req-credit" class="highlight">3</span> <span class="credit-icon">💳</span></div>
+                </div>
+                <div class="modal-actions" id="modal-actions">
+                    <button id="btn-cancel" class="btn-outline">취소</button>
+                    <button id="btn-voucher" class="btn-primary" style="background:#1e3a8a; display:none; flex:1.5; white-space:nowrap;">
+                        <img src="/static/images/gov_logo.png" style="width:16px; vertical-align:middle; margin-right:6px;" alt="정부 로고">
+                        바우처 결제
+                    </button>
+                    <button id="btn-confirm" class="btn-primary">일반 결제</button>
+                </div>
             </div>
         </div>
     </div>

@@ -286,11 +286,59 @@ body {
     background: var(--card-bg);
     box-shadow: 0 16px 40px rgba(0,0,0,0.5);
     border-radius: 8px;
-    padding: 32px;
+    padding: 0;
     width: 90%;
-    max-width: 400px;
+    max-width: 460px;
     transform: scale(1);
     transition: transform 0.2s ease;
+    overflow: hidden;
+}
+
+.modal-card-content {
+    padding: 24px 32px 32px 32px;
+}
+
+.modal-cover-image {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+    display: block;
+}
+
+.modal-meta-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+    color: var(--text-secondary);
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.modal-rating {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    color: var(--text-primary);
+    font-weight: 700;
+}
+
+.modal-amenities {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 24px;
+    padding-bottom: 24px;
+    border-bottom: 1px solid var(--border-subtle);
+}
+
+.amenity-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--text-secondary);
+    font-size: 13px;
+    font-weight: 500;
 }
 
 .modal-overlay.hidden .modal-card {
@@ -298,11 +346,11 @@ body {
 }
 
 .modal-card h2 {
-    font-size: 24px;
+    font-size: 22px;
     font-weight: 800;
-    margin-bottom: 24px;
+    margin-bottom: 8px;
     color: var(--text-primary);
-    text-align: center;
+    text-align: left;
 }
 
 .modal-form-group {

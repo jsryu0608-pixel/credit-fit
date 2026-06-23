@@ -184,22 +184,24 @@ function initMap(facilities) {
 
     facilities.forEach(fac => {
         // Map Emoji
-        let emoji = '📍';
+        let emoji = 'location_on';
         const name = fac.facility_name;
-        if (name.includes('축구') || name.includes('풋살')) emoji = '⚽';
-        else if (name.includes('수영')) emoji = '🏊‍♂️';
-        else if (name.includes('요가') || name.includes('필라테스')) emoji = '🧘‍♀️';
-        else if (name.includes('복싱') || name.includes('격투')) emoji = '🥊';
-        else if (name.includes('유도') || name.includes('태권') || name.includes('검도') || name.includes('주짓수')) emoji = '🥋';
-        else if (name.includes('탁구')) emoji = '🏓';
-        else if (name.includes('클라이밍')) emoji = '🧗';
-        else if (name.includes('배드민턴') || name.includes('테니스')) emoji = '🏸';
-        else if (name.includes('체육') || name.includes('스포츠') || name.includes('짐')) emoji = '🏋️‍♂️';
+        if (name.includes('축구') || name.includes('풋살')) emoji = 'sports_soccer';
+        else if (name.includes('수영')) emoji = 'pool';
+        else if (name.includes('요가') || name.includes('필라테스')) emoji = 'self_improvement';
+        else if (name.includes('복싱') || name.includes('격투')) emoji = 'sports_mma';
+        else if (name.includes('유도') || name.includes('태권') || name.includes('검도') || name.includes('주짓수')) emoji = 'sports_martial_arts';
+        else if (name.includes('탁구')) emoji = 'sports_tennis';
+        else if (name.includes('클라이밍')) emoji = 'terrain';
+        else if (name.includes('배드민턴') || name.includes('테니스')) emoji = 'sports_tennis';
+        else if (name.includes('체육') || name.includes('스포츠') || name.includes('짐')) emoji = 'fitness_center';
 
         // 네이버 지도 커스텀 HTML 마커 (스포티파이 디자인 유지)
         const markerHtml = `
             <div class="custom-spotify-marker-container">
-                <div class="spotify-marker" style="width:32px; height:32px; font-size:16px;">${emoji}</div>
+                <div class="spotify-marker" style="width:32px; height:32px; display:flex; align-items:center; justify-content:center;">
+                    <span class="material-symbols-outlined" style="font-size:18px; color:#fff;">${emoji}</span>
+                </div>
             </div>
         `;
 
@@ -271,6 +273,35 @@ function openBookingModal(fac) {
     currentSelectedFac = fac;
     document.getElementById('modal-fac-name').textContent = fac.facility_name;
     document.getElementById('modal-req-credit').textContent = fac.required_credit;
+    
+    // Inject Airbnb style data
+    document.getElementById('modal-image').src = fac.image || 'https://images.unsplash.com/photo-1534438327276-14e5300c3a48?auto=format&fit=crop&w=500&q=60';
+    document.getElementById('modal-rating-val').textContent = fac.rating || '4.5';
+    document.getElementById('modal-area').textContent = `면적: ${fac.area_sqm || 300}㎡`;
+
+    const amenitiesContainer = document.getElementById('modal-amenities');
+    amenitiesContainer.innerHTML = '';
+    
+    const allAmenities = fac.amenities || ['주차 가능', '샤워실', '개인 락커'];
+    
+    allAmenities.forEach(amenity => {
+        let icon = 'star';
+        if(amenity.includes('주차')) icon = 'local_parking';
+        else if(amenity.includes('샤워')) icon = 'shower';
+        else if(amenity.includes('락커')) icon = 'lock';
+        else if(amenity.includes('운동복')) icon = 'checkroom';
+        else if(amenity.includes('수건')) icon = 'dry';
+        else if(amenity.includes('Wi-Fi') || amenity.includes('와이파이')) icon = 'wifi';
+        else if(amenity.includes('정수기')) icon = 'water_drop';
+        else if(amenity.includes('카페')) icon = 'local_cafe';
+        
+        amenitiesContainer.innerHTML += `
+            <div class="amenity-item">
+                <span class="material-symbols-outlined" style="font-size: 18px; color: #fff;">${icon}</span>
+                <span>${amenity}</span>
+            </div>
+        `;
+    });
     
     // Show voucher button only if public facility
     const voucherBtn = document.getElementById('btn-voucher');
